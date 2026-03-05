@@ -1,0 +1,136 @@
+#include "vex.h"
+
+using namespace vex;
+
+// Pass in the devices we want to use
+Assembly::Assembly(
+        mik::motor left_intake_top,
+        mik::motor right_intake_bottom,
+        mik::motor left_intake_bottom, 
+        vex::optical color_encoder,
+        mik::piston mid_hood_piston,
+        mik::piston odom_lift,
+        mik::piston hood_piston,
+        mik::piston doinker_piston,
+        mik::piston wing_piston,
+        mik::piston intake_lift
+) :
+    // Assign the ports to the devices
+    left_intake_top(left_intake_top),
+    right_intake_bottom(right_intake_bottom),
+    left_intake_bottom(left_intake_bottom),
+    color_encoder(color_encoder),
+    mid_hood_piston(mid_hood_piston),   // Make sure when using a 3 wire device that isnt mik::piston you convert the port. `to_triport(PORT_A)`.
+    odom_lift(odom_lift),
+    hood_piston(hood_piston),
+    matchloader_piston(matchloader_piston),
+    wing_piston(wing_piston),
+    intake_lift(intake_lift)
+{};
+
+// You want to call this function once in the user control function in main.
+void Assembly::init() {
+    // Create the task to move the lift arm. We only want one task to be created
+    //lift_task = vex::task([](){
+    //    assembly.move_lift_arm();
+     //   return 0;
+    //});
+    // To stop the task do `assembly.lift_task.stop();`
+} 
+
+// You want to put this function inside the user control loop in main.
+void Assembly::control() {
+    intake_control();
+    mid_hood();
+    odom_lift_control();
+    matchloader();
+    wing();
+}
+
+// void Assembly::move_lift_arm() {
+    // Create a proportional controller. Increase the P just enough so there isn't much oscillation.
+    //PID lift_PID(.1, 0, 0);
+    //while (true) {
+        // How far we need to move until desired angle
+        //float error = lift_arm_position - lift_arm_encoder.angle();
+        // Converting error into motor voltage
+        //float output = lift_PID.compute(error);
+        //lift_arm_motors.spin(fwd, output, volt);
+        //vex::this_thread::sleep_for(20);
+    //}
+//}
+
+// void Assembly::lift_arm_control() {
+//     // new_press macro only allows input to go through when button is pressed. Resets after button is released.
+//     if (btnX_new_press(Controller.ButtonX.pressing())) {
+//         // If Up arrow is pressed it will swap lift positions between scoring and loading
+//         if (lift_arm_position != SCORING) {
+//             lift_arm_position = SCORING; // Lift task will read this value
+//         } else {
+//             lift_arm_position = LOADING;
+//         }
+//     } else if (btnUp_new_press(Controller.ButtonUp.pressing())) {
+//         // If Up arrow is pressed it will swap lift positions between loading and idle
+//         if (lift_arm_position != LOADING) {
+//             lift_arm_position = LOADING;
+//         } else {
+//             lift_arm_position = IDLE;
+//         }
+//     }
+// }
+
+// Spins intake forward if R1 is being held, reverse if R2 is being held; stops otherwise
+void Assembly::intake_control() {
+    if (Controller.ButtonR1.pressing()) {
+        left_intake_top.spin(fwd, -12, volt);
+        right_intake_bottom.spin(fwd, 12, volt);
+        left_intake_bottom.spin(fwd, -12, volt);
+    } else if (Controller.ButtonR2.pressing()) {
+        left_intake_top.spin(fwd, 12, volt);
+        right_intake_bottom.spin(fwd, -12, volt);
+        left_intake_bottom.spin(fwd, 12, volt);
+        intake_lift.close();
+    } else if (Controller.ButtonL2.pressing()) { //score mid
+        left_intake_top.spin(fwd, -8, volt);
+        right_intake_bottom.spin(fwd, 10, volt);
+        left_intake_bottom.spin(fwd, 12, volt);
+     } else if (Controller.ButtonL1.pressing()) { //score high
+     left_intake_top.spin(fwd, -12, volt);
+     right_intake_bottom.spin(fwd, 10, volt);
+     left_intake_bottom.spin(fwd, -12, volt);
+     hood_piston.open();
+    } else {
+        left_intake_bottom.stop();
+        left_intake_top.stop();
+        right_intake_bottom.stop();
+        hood_piston.close();
+        intake_lift.open();
+    }
+}
+
+// Extends or retracts wing when button A is pressed, can only extend or retract again until button A is released and pressed again
+void Assembly::mid_hood() {
+    if (btnLeft_new_press(Controller.ButtonLeft.pressing())) {
+        mid_hood_piston.toggle();
+    }
+}
+
+void Assembly::odom_lift_control() {
+    if (btnRight_new_press(Controller.ButtonRight.pressing())) {
+        odom_lift.toggle();
+    }
+}
+
+void Assembly::matchloader() {
+    if (btnDown_new_press(Controller.ButtonDown.pressing())) {
+        matchloader_piston.toggle();
+    }
+}
+
+void Assembly::wing() {
+    if (Controller.ButtonX.pressing()) {
+        wing_piston.close();
+    } else {
+    wing_piston.open();
+    }
+}

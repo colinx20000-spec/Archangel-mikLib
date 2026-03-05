@@ -1,0 +1,163 @@
+#include "vex.h"
+
+using namespace vex;
+using namespace mik;
+
+
+void suck() {
+    vex::task suck_middle_task([](){
+    assembly.left_intake_top.spin(fwd, 12, volt); //suck balls back into intake
+    assembly.right_intake_bottom.spin(fwd, 12, volt);
+    assembly.left_intake_bottom.spin(fwd, 12, volt);
+    vex::this_thread::sleep_for(200);
+    assembly.left_intake_top.spin(fwd, -12, volt); //bring balls back into primed position
+    assembly.right_intake_bottom.spin(fwd, 12, volt);
+    assembly.left_intake_bottom.spin(fwd, -12, volt);
+    vex::this_thread::sleep_for(200);
+    assembly.left_intake_top.stop(brake);
+    assembly.right_intake_bottom.stop(brake);
+    assembly.left_intake_bottom.stop(brake);
+    return 0;
+    });
+    
+}
+
+
+void colorsuck() { //with an optical sensor near the top roller, we can prevent any blue balls from being scored in the middle goal during skills
+    assembly.left_intake_top.spin(fwd, -8, volt); //score in the middle goal while blue object is not recognized
+    assembly.right_intake_bottom.spin(fwd, 10, volt);
+    assembly.left_intake_bottom.spin(fwd, 12, volt);
+
+            int timeout_start = Brain.Timer.time(vex::timeUnits::sec); //start a timeout timer
+            assembly.color_encoder.objectDetectThreshold(60); //ensures the object is detected close to the sensor
+
+            while (1) {
+            bool ballnear = assembly.color_encoder.isNearObject(); //get proximity of the object
+            double hue = assembly.color_encoder.hue(); //get color of the object
+
+                if (ballnear && (hue > 180 && hue < 250)) { //if blue ball is detected
+                wait(0.2, sec); //continue outtaking for 0.2s before spinning the motors back
+                suck();
+                    break;
+                }
+                if (Brain.Timer.time(vex::timeUnits::sec) - timeout_start > 4.5) { //in case the bot has no blue balls, the task will end
+                    break;
+                }
+                vex::this_thread::sleep_for(20);
+
+            }
+
+}
+
+void intake_in(){
+    assembly.left_intake_top.spin(fwd, -12, volt);
+    assembly.right_intake_bottom.spin(fwd, 12, volt);
+    assembly.left_intake_bottom.spin(fwd, -12, volt);
+
+}
+
+void stop_intake(){
+  assembly.left_intake_top.stop(brake);
+  assembly.right_intake_bottom.stop(brake);
+  assembly.left_intake_bottom.stop(brake);
+}
+
+void matchloader_down(){assembly.matchloader_piston.open();}
+void matchloader_up(){assembly.matchloader_piston.close();}
+
+void long_goal_colorsort_auton(){
+    assembly.left_intake_top.spin(fwd, -12, volt);
+    assembly.right_intake_bottom.spin(fwd, 12, volt);
+    assembly.left_intake_bottom.spin(fwd, -12, volt);
+    assembly.hood_piston.open();
+
+                int timeout_start = Brain.Timer.time(vex::timeUnits::sec); //start a timeout timer
+                assembly.color_encoder.objectDetectThreshold(60); //ensures the object is detected close to the sensor
+
+                while (1) {
+                bool ballnear = assembly.color_encoder.isNearObject(); //get proximity of the object
+                double hue = assembly.color_encoder.hue(); //get color of the object
+
+                //if blue ball is detected on red alliance or red ball is detected on blue alliance
+                    if (ballnear && ((keepColor == RED) && (hue > 180 && hue < 250)) || ballnear && (keepColor == BLUE) && (hue > 350 || hue < 20)) {
+                    wait(0.2, sec); //continue outtaking for 0.2s before spinning the motors back
+                        vex::task outtake_one_ball_mid([](){ //task so that it can get rid of the ball as it moves on
+                            assembly.left_intake_top.spin(fwd, 12, volt); //outtake
+                            assembly.right_intake_bottom.spin(fwd, -12, volt);
+                            assembly.left_intake_bottom.spin(fwd, 12, volt);
+                            vex::this_thread::sleep_for(200);
+                            assembly.left_intake_top.spin(fwd, -8, volt); //score mid
+                            assembly.right_intake_bottom.spin(fwd, 10, volt);
+                            assembly.left_intake_bottom.spin(fwd, 12, volt);
+                            vex::this_thread::sleep_for(200);
+                            suck();
+                        return 0;
+                        });
+                        break;
+                    }
+                    if (Brain.Timer.time(vex::timeUnits::sec) - timeout_start > scoringTime) { //if no oppposite-colored balls appear after the allotted scoring time, the task will end
+                        break;
+                    }
+                    vex::this_thread::sleep_for(20);
+
+                }
+
+
+}
+
+
+
+
+
+
+// void intake_ring_halfway() {
+//     assembly.intake_motor.spin(fwd, 10, volt);
+//     vex::task intake_ring_halfway_task([](){
+//         vex::distance d(PORT12);
+//         int timeout_start = Brain.Timer.time(vex::timeUnits::sec);
+//         while (1) {
+//             if (d.objectDistance(mm) < 50) {
+//                 assembly.intake_motor.stop(brake);
+//                 break;
+//             }
+//             if (Brain.Timer.time(vex::timeUnits::sec) - timeout_start > 5) {
+//                 break;
+//             }
+//             vex::this_thread::sleep_for(50);
+
+//         }
+//         return 0;
+//   });
+// }
+
+// void intake_in() {
+//     assembly.intake_motor.spin(fwd, 12, volt);
+// }
+
+// void stop_intake() {
+//     assembly.intake_motor.stop(brake);
+// }
+
+// void intake_reverse() {
+//     assembly.intake_motor.spin(fwd, -12, volt);
+// }
+
+// void clamp_goal() {
+//     assembly.long_piston.set(true);
+//     wait(.2, sec);
+//     mogo_constants();
+// }
+
+// void unclamp_goal() {
+//     assembly.long_piston.set(false);
+//     odom_constants();
+// }
+
+// void move_lift(int pos) {
+//     static bool lift_task_started = false;
+//     if (!lift_task_started) {
+//         assembly.init();
+//         lift_task_started = true;
+//     }
+//     assembly.lift_arm_position = pos;
+// }
