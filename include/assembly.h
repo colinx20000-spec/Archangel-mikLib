@@ -4,11 +4,11 @@
 
 using namespace vex;
 
-enum lift_positions : int { IDLE = 229, LOADING = 206, SCORING = 99 };
+//enum lift_positions : int { IDLE = 229, LOADING = 206, SCORING = 99 };
 
 enum AllianceColor {
-    BLUE = 1,
-    RED = 2
+    BLUE,
+    RED
 };
 AllianceColor keepColor;
 double hue;

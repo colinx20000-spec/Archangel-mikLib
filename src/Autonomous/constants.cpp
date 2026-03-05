@@ -3,8 +3,9 @@
 using namespace vex;
 using namespace mik;
 
+// adjust throttle sensitivity/deadzone
 void default_constants(void) {
-	chassis.set_control_constants(5, 10, 1.019, 5, 10, 1.019);
+	chassis.set_control_constants(3, 8, 1.019, 3, 8, 1.03);
 
 	// Each constant set is in the form of (maxVoltage, kP, kI, kD, startI).
     chassis.set_turn_constants(12, .437, .0215, 3.686, 15);

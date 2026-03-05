@@ -51,16 +51,16 @@ Chassis chassis(
 );
 
 Assembly assembly(
-        mik::motor(PORT7, true, "leftIntakeTop"),
-        mik::motor(PORT9, true, "rightIntakeBottom"),
-        mik::motor(PORT10, true, "leftIntakeBottom"), 
+        mik::motor(PORT7, true, green_18_1, "leftIntakeTop"),
+        mik::motor(PORT9, true, green_18_1, "rightIntakeBottom"),
+        mik::motor(PORT10, true, blue_6_1, "leftIntakeBottom"), 
 		vex::optical(PORT11), //optical sensor
-        mik::piston(PORT_G), //mid hood
-        mik::piston(PORT_B), //odomlift
-        mik::piston(PORT_A), //hood
-        mik::piston(PORT_F), //doinker
-        mik::piston(PORT_E), //wing
-        mik::piston(PORT_D) //intakelift
+        mik::piston(PORT_G, false), //mid hood
+        mik::piston(PORT_B, false), //odomlift
+        mik::piston(PORT_A, false), //hood
+        mik::piston(PORT_F, false), //doinker
+        mik::piston(PORT_E, true), //wing
+        mik::piston(PORT_D, false) //intakelift
 );
 
 /** Allows UI to display all motor values */
