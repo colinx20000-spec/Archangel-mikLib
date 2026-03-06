@@ -82,7 +82,7 @@ void long_goal_colorsort_auton(){
                 double hue = assembly.color_encoder.hue(); //get color of the object
 
                 //if blue ball is detected on red alliance or red ball is detected on blue alliance
-                    if ((ballnear && ((keepColor == RED) && (hue > 180 && hue < 250)) || ballnear && (keepColor == BLUE) && (hue > 350 || hue < 20))) {
+                    if ((ballnear && (keepColor == RED) && (hue > 180 && hue < 250)) || (ballnear && (keepColor == BLUE) && (hue > 350 || hue < 20))) {
                     wait(0.2, sec); //continue outtaking for 0.2s before spinning the motors back
                         vex::task outtake_one_ball_mid([](){ //task so that it can get rid of the ball as it moves on
                             assembly.left_intake_top.spin(fwd, 12, volt); //outtake
