@@ -15,9 +15,6 @@ static int run_UI() {
 void pre_auton() {
     init();
     default_constants();
-    
-    // ensure the odom lift is extended before any autonomous routine runs
-    assembly.odom_lift.open();
 
     UI = task(run_UI);
 }
@@ -31,7 +28,7 @@ void user_control(void) {
     while (calibrating) { task::sleep(50); }
 
     // close the odom lift as soon as driver control begins
-    assembly.odom_lift.close();
+    assembly.odom_lift.open();
 
     // How you want your drivetrain to stop during driver
     chassis.set_brake_type(brakeType::coast);
@@ -41,7 +38,7 @@ void user_control(void) {
     while (true) {
         if (!control_disabled()) {
             // Add your user control code here
-            chassis.control(drive_mode::SPLIT_ARCADE_CURVED);
+            chassis.control(drive_mode::SPLIT_ARCADE);
             assembly.control();
         }
         task::sleep(5);

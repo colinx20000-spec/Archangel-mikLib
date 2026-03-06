@@ -2,6 +2,15 @@
 
 #include "vex.h"
 
+enum AllianceColor {
+    BLUE,
+    RED
+};
+
+extern AllianceColor keepColor;
+extern double hue;
+extern int scoringTime;
+
 void intake_in();
 
 void stop_intake();

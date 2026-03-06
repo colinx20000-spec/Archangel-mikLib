@@ -10,7 +10,7 @@ vex::competition Competition;
 bool calibrating = false;
 
 // Allows recalibration of the inertial using MINIMUN_INERTIAL_CALIBRATION_ERROR
-bool force_calibrate_inertial = false;
+bool force_calibrate_inertial = true;
 
 // After inertial sensor calibration the program waits 1 second and checks 
 // to see if the angle has changed more than this value. If so, it will recalibrate 
@@ -21,18 +21,18 @@ static const float MINIMUN_INERTIAL_CALIBRATION_ERROR = .05;
 Chassis chassis(
     // Drivetrain motors
     mik::motor_group({
-		mik::motor(PORT5, false, blue_6_1, "left_front_motor"), 
-		mik::motor(PORT2, true, blue_6_1, "left_middle_motor"), 
-		mik::motor(PORT3, true, blue_6_1, "left_back_motor")
+		mik::motor(PORT5, true, blue_6_1, "left_front_motor"), 
+		mik::motor(PORT2, false, blue_6_1, "left_middle_motor"), 
+		mik::motor(PORT3, false, blue_6_1, "left_back_motor")
     }),
     mik::motor_group({
-		mik::motor(PORT13, false, blue_6_1, "right_front_motor"), 
-		mik::motor(PORT12, false, blue_6_1, "right_middle_motor"), 
+		mik::motor(PORT13, true, blue_6_1, "right_front_motor"), 
+		mik::motor(PORT12, true, blue_6_1, "right_middle_motor"), 
 		mik::motor(PORT15, false, blue_6_1, "right_back_motor")
     }),
 
     PORT6, // Inertia sensor port
-    360,    // Inertial scale, value that reads after turning robot a full 360
+    352.6,    // Inertial scale, value that reads after turning robot a full 360
 
     PORT17, // Forward Tracker Port
     -2,     // Forward Tracker wheel diameter in inches (negative flips direction)
@@ -51,16 +51,16 @@ Chassis chassis(
 );
 
 Assembly assembly(
-        mik::motor(PORT7, true, green_18_1, "leftIntakeTop"),
-        mik::motor(PORT9, true, green_18_1, "rightIntakeBottom"),
-        mik::motor(PORT10, true, blue_6_1, "leftIntakeBottom"), 
+        mik::motor(PORT7, false, green_18_1, "leftIntakeTop"),
+        mik::motor(PORT9, false, green_18_1, "rightIntakeBottom"),
+        mik::motor(PORT10, false, blue_6_1, "leftIntakeBottom"), 
 		vex::optical(PORT11), //optical sensor
         mik::piston(PORT_G, false), //mid hood
-        mik::piston(PORT_B, false), //odomlift
+        mik::piston(PORT_B, true), //odomlift
         mik::piston(PORT_A, false), //hood
         mik::piston(PORT_F, false), //doinker
-        mik::piston(PORT_E, true), //wing
-        mik::piston(PORT_D, false) //intakelift
+        mik::piston(PORT_E, false), //wing
+        mik::piston(PORT_D, true) //intakelift
 );
 
 /** Allows UI to display all motor values */

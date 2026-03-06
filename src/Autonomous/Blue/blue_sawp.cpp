@@ -11,17 +11,17 @@ std::string blue_sawp(bool calibrate, mik::auto_variation var, bool get_name) {
         return "";
     }
     odom_constants();
-    AllianceColor keepColor = BLUE;
+    keepColor = BLUE;
     scoringTime = 2; //score in long goal for 2s max
 
-    chassis.turn_to_point(-48.9, 47.0); //drive towards 1st matchloader
-    chassis.drive_to_point(-48.9, 47.0);
+    chassis.turn_to_point(-48.9, -47.0); //drive towards 1st matchloader
+    chassis.drive_to_point(-48.9, -47.0);
 
     //reset x and y coordinates
     // chassis.reset_axis(front_sensor, left_wall, 5);
     // chassis.reset_axis(left_sensor, bottom_wall, 5);
 
-    chassis.turn_to_point(-57.2, 47.0); //drive into 1st matchloader
+    chassis.turn_to_point(-57.2, -47.0); //drive into 1st matchloader
     intake_in(); //start intaking
     matchloader_down();
     chassis.drive_distance(8.0, {.max_voltage=6, .timeout = 1000});
@@ -50,8 +50,8 @@ std::string blue_sawp(bool calibrate, mik::auto_variation var, bool get_name) {
     matchloader_down();
 
     chassis.drive_to_pose(-11.6, 12.1, 315); //score mid
-    assembly.left_intake_top.spin(fwd, -8, volt); //intake speeds are here so it can be adjusted
-    assembly.right_intake_bottom.spin(fwd, 10, volt);
+    assembly.left_intake_top.spin(fwd, -12, volt); //intake speeds are here so it can be adjusted
+    assembly.right_intake_bottom.spin(fwd, -10, volt);
     assembly.left_intake_bottom.spin(fwd, 12, volt);
     wait(.8, sec);
 
@@ -73,7 +73,7 @@ std::string blue_sawp(bool calibrate, mik::auto_variation var, bool get_name) {
     // chassis.reset_axis(front_sensor, left_wall, 5);
     // chassis.reset_axis(right_sensor, top_wall, 5);
 
-    scoringTime = 5; //ensures that the robot will keep scoring until auton ends
+    // scoringTime = 5; //ensures that the robot will keep scoring until auton ends
     chassis.drive_to_pose(-31.274, 47.124, 270);
     matchloader_up();
     long_goal_colorsort_auton();

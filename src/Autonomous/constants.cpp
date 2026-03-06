@@ -5,13 +5,13 @@ using namespace mik;
 
 // adjust throttle sensitivity/deadzone
 void default_constants(void) {
-	chassis.set_control_constants(3, 8, 1.019, 3, 8, 1.03);
+	chassis.set_control_constants(3, 8, 1.019, 3, 2, 1.045);
 
 	// Each constant set is in the form of (maxVoltage, kP, kI, kD, startI).
-    chassis.set_turn_constants(12, .437, .0215, 3.686, 15);
-    chassis.set_drive_constants(10, 1.5, 0, 10, 0);
+    chassis.set_turn_constants(12, .257, .011, 2.0, 15);
+    chassis.set_drive_constants(12, 1.38, 0, 8.5, 0);
     chassis.set_heading_constants(6, .4, 0, 1, 0);
-    chassis.set_swing_constants(12, .437, .0295, 3.486, 15);
+    chassis.set_swing_constants(12, .487, .0063, 5.256, 15);
 
 
 	// Each exit condition set is in the form of (settle_error, settle_time, timeout).
@@ -22,7 +22,8 @@ void default_constants(void) {
 
 void odom_constants(void) {
 	default_constants();
-	chassis.set_tracking_offsets(0, .3);
+	//was 0, .3
+	chassis.set_tracking_offsets(0, -0.2875);
 
 	chassis.heading_max_voltage = 10;
 	chassis.drive_max_voltage = 8;

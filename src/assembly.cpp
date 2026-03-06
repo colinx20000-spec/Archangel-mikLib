@@ -11,7 +11,7 @@ Assembly::Assembly(
         mik::piston mid_hood_piston,
         mik::piston odom_lift,
         mik::piston hood_piston,
-        mik::piston doinker_piston,
+        mik::piston matchloader_piston,
         mik::piston wing_piston,
         mik::piston intake_lift
 ) :
@@ -81,30 +81,30 @@ void Assembly::control() {
 
 // Spins intake forward if R1 is being held, reverse if R2 is being held; stops otherwise
 void Assembly::intake_control() {
-    if (Controller.ButtonR1.pressing()) {
+    if (Controller.ButtonR2.pressing()) {
         left_intake_top.spin(fwd, -12, volt);
         right_intake_bottom.spin(fwd, 12, volt);
         left_intake_bottom.spin(fwd, -12, volt);
-    } else if (Controller.ButtonR2.pressing()) {
+    } else if (Controller.ButtonR1.pressing()) {
         left_intake_top.spin(fwd, 12, volt);
         right_intake_bottom.spin(fwd, -12, volt);
         left_intake_bottom.spin(fwd, 12, volt);
-        intake_lift.close();
+        intake_lift.open();
     } else if (Controller.ButtonL2.pressing()) { //score mid
-        left_intake_top.spin(fwd, -8, volt);
-        right_intake_bottom.spin(fwd, 10, volt);
-        left_intake_bottom.spin(fwd, 12, volt);
+        left_intake_top.spin(fwd, -12, volt);
+        right_intake_bottom.spin(fwd, -10, volt);
+        left_intake_bottom.spin(fwd, -12, volt);
      } else if (Controller.ButtonL1.pressing()) { //score high
      left_intake_top.spin(fwd, -12, volt);
      right_intake_bottom.spin(fwd, 10, volt);
      left_intake_bottom.spin(fwd, -12, volt);
-     hood_piston.open();
+     hood_piston.close();
     } else {
         left_intake_bottom.stop();
         left_intake_top.stop();
         right_intake_bottom.stop();
-        hood_piston.close();
-        intake_lift.open();
+        hood_piston.open();
+        intake_lift.close();
     }
 }
 
@@ -116,21 +116,24 @@ void Assembly::mid_hood() {
 }
 
 void Assembly::odom_lift_control() {
-    if (btnRight_new_press(Controller.ButtonRight.pressing())) {
+    if (btnRight_new_press(Controller.ButtonUp.pressing())) {
         odom_lift.toggle();
+    }
+    if(odom_lift.state()){ //rumbles the controller if the odom piston is open
+        Controller.rumble("-");
     }
 }
 
 void Assembly::matchloader() {
-    if (btnDown_new_press(Controller.ButtonDown.pressing())) {
+    if (btnDown_new_press(Controller.ButtonRight.pressing())) {
         matchloader_piston.toggle();
     }
 }
 
 void Assembly::wing() {
-    if (Controller.ButtonX.pressing()) {
-        wing_piston.close();
+    if (Controller.ButtonY.pressing()) {
+        wing_piston.set(false);
     } else {
-    wing_piston.open();
+    wing_piston.set(true);
     }
 }

@@ -6,14 +6,6 @@ using namespace vex;
 
 //enum lift_positions : int { IDLE = 229, LOADING = 206, SCORING = 99 };
 
-enum AllianceColor {
-    BLUE,
-    RED
-};
-AllianceColor keepColor;
-double hue;
-int scoringTime;
-
 class Assembly {
 public:
     Assembly(

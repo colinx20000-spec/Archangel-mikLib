@@ -18,7 +18,8 @@ std::string skills(bool calibrate, mik::auto_variation var, bool get_name) {
 
 
     colorsuck();
-
+    return 0;
+}
     // // Score alliance ring
     // move_lift(hang);
     // wait(.4, sec);
@@ -91,4 +92,3 @@ std::string skills(bool calibrate, mik::auto_variation var, bool get_name) {
     // stop_intake();
     
     // return "";
-}
