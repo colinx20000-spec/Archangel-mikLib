@@ -118,9 +118,9 @@ void Assembly::mid_hood() {
 void Assembly::odom_lift_control() {
     if (btnRight_new_press(Controller.ButtonUp.pressing())) {
         odom_lift.toggle();
-    }
-    if(odom_lift.state()){ //rumbles the controller if the odom piston is open
+        if(odom_lift.state()){ //rumbles the controller if the odom piston is open
         Controller.rumble("-");
+    } 
     }
 }
 
