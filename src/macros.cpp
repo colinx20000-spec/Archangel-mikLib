@@ -28,7 +28,7 @@ void suck() {
 
 void colorsuck() { //with an optical sensor near the top roller, we can prevent any blue balls from being scored in the middle goal during skills
     assembly.left_intake_top.spin(fwd, -8, volt); //score in the middle goal while blue object is not recognized
-    assembly.right_intake_bottom.spin(fwd, 10, volt);
+    assembly.right_intake_bottom.spin(fwd, -10, volt);
     assembly.left_intake_bottom.spin(fwd, 12, volt);
 
             int timeout_start = Brain.Timer.time(vex::timeUnits::sec); //start a timeout timer
@@ -85,13 +85,14 @@ void long_goal_colorsort_auton(){
                     if ((ballnear && (keepColor == RED) && (hue > 180 && hue < 250)) || (ballnear && (keepColor == BLUE) && (hue > 350 || hue < 20))) {
                     wait(0.2, sec); //continue outtaking for 0.2s before spinning the motors back
                         vex::task outtake_one_ball_mid([](){ //task so that it can get rid of the ball as it moves on
+                            assembly.hood_piston.close();
                             assembly.left_intake_top.spin(fwd, 12, volt); //outtake
                             assembly.right_intake_bottom.spin(fwd, -12, volt);
                             assembly.left_intake_bottom.spin(fwd, 12, volt);
                             vex::this_thread::sleep_for(200);
-                            assembly.left_intake_top.spin(fwd, -8, volt); //score mid
-                            assembly.right_intake_bottom.spin(fwd, 10, volt);
-                            assembly.left_intake_bottom.spin(fwd, 12, volt);
+                            assembly.left_intake_top.spin(fwd, -8, volt); //score the wrong color ball mid
+                            assembly.right_intake_bottom.spin(fwd, -10, volt);
+                            assembly.left_intake_bottom.spin(fwd, -12, volt);
                             vex::this_thread::sleep_for(200);
                             suck();
                         return 0;
@@ -99,6 +100,7 @@ void long_goal_colorsort_auton(){
                         break;
                     }
                     if (Brain.Timer.time(vex::timeUnits::sec) - timeout_start > scoringTime) { //if no oppposite-colored balls appear after the allotted scoring time, the task will end
+                        assembly.hood_piston.close();
                         break;
                     }
                     vex::this_thread::sleep_for(20);
