@@ -9,7 +9,7 @@ enum AllianceColor {
 
 extern AllianceColor keepColor;
 extern double hue;
-extern int scoringTime;
+extern double scoringTime;
 
 void intake_in();
 

@@ -5,7 +5,7 @@ using namespace mik;
 
 AllianceColor keepColor;
 double hue;
-int scoringTime;
+double scoringTime;
 
 void suck() {
     vex::task suck_middle_task([](){
