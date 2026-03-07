@@ -55,6 +55,7 @@ Assembly assembly(
         mik::motor(PORT9, false, green_18_1, "rightIntakeBottom"),
         mik::motor(PORT10, false, blue_6_1, "leftIntakeBottom"), 
 		vex::optical(PORT11), //optical sensor
+		vex::inertial(PORT7), //inertial sensor
         mik::piston(PORT_G, false), //mid hood
         mik::piston(PORT_B, true), //odomlift
         mik::piston(PORT_A, false), //hood

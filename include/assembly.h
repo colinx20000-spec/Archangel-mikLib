@@ -13,6 +13,7 @@ public:
         mik::motor right_intake_bottom,
         mik::motor left_intake_bottom, 
         vex::optical color_encoder,
+        vex::inertial inertial_sensor,
         mik::piston mid_hood_piston,
         mik::piston odom_lift,
         mik::piston hood_piston,
@@ -29,11 +30,13 @@ public:
     void odom_lift_control();
     void matchloader();
     void wing();
+    void anti_tip();
  
     mik::motor left_intake_top;
     mik::motor right_intake_bottom;
     mik::motor left_intake_bottom;
     vex::optical color_encoder;
+    vex::inertial inertial_sensor;
     mik::piston mid_hood_piston;
     mik::piston odom_lift;
     mik::piston hood_piston;

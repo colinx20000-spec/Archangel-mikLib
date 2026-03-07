@@ -8,6 +8,7 @@ Assembly::Assembly(
         mik::motor right_intake_bottom,
         mik::motor left_intake_bottom, 
         vex::optical color_encoder,
+        vex::inertial inertial_sensor,
         mik::piston mid_hood_piston,
         mik::piston odom_lift,
         mik::piston hood_piston,
@@ -20,6 +21,7 @@ Assembly::Assembly(
     right_intake_bottom(right_intake_bottom),
     left_intake_bottom(left_intake_bottom),
     color_encoder(color_encoder),
+    inertial_sensor(inertial_sensor),
     mid_hood_piston(mid_hood_piston),   // Make sure when using a 3 wire device that isnt mik::piston you convert the port. `to_triport(PORT_A)`.
     odom_lift(odom_lift),
     hood_piston(hood_piston),
@@ -45,6 +47,7 @@ void Assembly::control() {
     odom_lift_control();
     matchloader();
     wing();
+    anti_tip();
 }
 
 // void Assembly::move_lift_arm() {
@@ -135,5 +138,16 @@ void Assembly::wing() {
         wing_piston.set(false);
     } else {
     wing_piston.set(true);
+    }
+}
+
+void Assembly::anti_tip() {
+    inertial_sensor.pitch();
+    if (inertial_sensor.pitch() > 60) {
+    chassis.left_drive.spin(vex::directionType::fwd, -12, vex::voltageUnits::volt);
+    chassis.right_drive.spin(vex::directionType::fwd, -12, vex::voltageUnits::volt);
+    } else if (inertial_sensor.pitch() < -60) {
+    chassis.left_drive.spin(vex::directionType::fwd, 12, vex::voltageUnits::volt);
+    chassis.right_drive.spin(vex::directionType::fwd, 12, vex::voltageUnits::volt);
     }
 }
