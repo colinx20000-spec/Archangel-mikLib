@@ -18,7 +18,9 @@ std::string blue_right_winpoint(bool calibrate, mik::auto_variation var, bool ge
     keepColor = BLUE;
     scoringTime = 1.5; //score in long goal for 2s max
 
-    chassis.drive_to_pose(-48.0, -47.0, 270, {.min_voltage=2}); //drive towards 1st matchloader
+   chassis.turn_to_point(-48.0, -47.0); //drive towards 1st matchloader
+    chassis.drive_to_point(-48.0, -47.0);
+    chassis.turn_to_angle(270);
 
     //reset x and y coordinates
     // chassis.reset_axis(front_sensor, left_wall, 5);
